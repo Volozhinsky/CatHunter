@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/selectBreedFragment">
+
+    <fragment
+        android:id="@+id/selectBreedFragment"
+        android:name="com.volozhinsky.cathunter.ui.select_breed.SelectBreedFragment"
+        android:label="fragment_select_breed"
+        tools:layout="@layout/fragment_select_breed" >
+        <action
+            android:id="@+id/action_selectBreedFragment_to_randomCatFragment"
+            app:destination="@id/randomCatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/randomCatFragment"
+        android:name="com.volozhinsky.cathunter.ui.random_cat.RandomCatFragment"
+        android:label="fragment_random_cat"
+        tools:layout="@layout/fragment_random_cat" >
+        <argument
+            android:name="idBreed"
+            app:argType="string" />
+    </fragment>
+</navigation>
