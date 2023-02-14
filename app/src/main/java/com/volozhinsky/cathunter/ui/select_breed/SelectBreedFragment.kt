@@ -50,9 +50,8 @@ class SelectBreedFragment : Fragment() {
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {}
             }
-            catBreedViewModel.getBreedList()
-
         }
+        catBreedViewModel.getBreedList()
     }
 
     fun startRandomCatFragment(id: String){
