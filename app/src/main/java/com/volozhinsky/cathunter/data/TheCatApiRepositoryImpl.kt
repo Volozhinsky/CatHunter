@@ -26,8 +26,11 @@ class TheCatApiRepositoryImpl @Inject constructor(
 
     override suspend fun getRandomCatOfTheBreed(idBreed: String): Cat {
         return withContext(Dispatchers.IO) {
-            catService.getRandomCatOfTheBreed(idBreed).execute().body()?.get(0)
-                ?.let { catMapper(it) } ?: throw Exception()
+            val qwery = catService.getRandomCatOfTheBreed(idBreed)
+            qwery.execute().body()?.get(0)
+                ?.let {
+                    catMapper(it)
+                } ?: throw Exception()
         }
     }
 }

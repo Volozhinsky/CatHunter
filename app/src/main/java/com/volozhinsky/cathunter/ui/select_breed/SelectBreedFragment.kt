@@ -7,16 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Spinner
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.volozhinsky.cathunter.R
+import com.volozhinsky.cathunter.ui.models.CatBreedUI
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SelectBreedFragment : Fragment() {
 
-    val catBreedViewModel by viewModels<SelectBreedViewModel>()
+    private val catBreedViewModel by viewModels<SelectBreedViewModel>()
+    private var listbreed: List<CatBreedUI>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,24 +34,23 @@ class SelectBreedFragment : Fragment() {
         val spinerAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
-            emptyList<Spinner>()
+            emptyList<String>()
         )
         spinner.adapter = spinerAdapter
-        catBreedViewModel.breedListLiveData.observe(viewLifecycleOwner) { listBreed ->
+        catBreedViewModel.breedListLiveData.observe(viewLifecycleOwner) { listBreedLd ->
+            listbreed = listBreedLd
             val spinerAdapter = ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_spinner_item,
-                listBreed.map{
+                listBreedLd.map{
                     it.name
                 }
             )
             spinner.adapter = spinerAdapter
-            spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
-                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                    startRandomCatFragment(listBreed[p2].id)
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {}
+        }
+        view.findViewById<Button>(R.id.buttonShowCat).setOnClickListener{
+            listbreed?.let {
+                startRandomCatFragment(it[spinner.selectedItemPosition].id)
             }
         }
         catBreedViewModel.getBreedList()
