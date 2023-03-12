@@ -7,11 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.volozhinsky.cathunter.domain.GetBreedsListUseCase
 import com.volozhinsky.cathunter.ui.mappers.CatBreedUIMapper
 import com.volozhinsky.cathunter.ui.models.CatBreedUI
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
 class SelectBreedViewModel @Inject constructor(
     private val useCase: GetBreedsListUseCase,
     private val breedUIMapper: CatBreedUIMapper
