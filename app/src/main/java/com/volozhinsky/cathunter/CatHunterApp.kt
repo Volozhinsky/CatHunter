@@ -1,7 +1,12 @@
 package com.volozhinsky.cathunter
 
 import android.app.Application
-import dagger.hilt.android.HiltAndroidApp
+import com.volozhinsky.cathunter.di.ApplicationComponent
+import com.volozhinsky.cathunter.di.DaggerApplicationComponent
 
-@HiltAndroidApp
-class CatHunterApp : Application()
+class CatHunterApp : Application(){
+
+    val appComponent: ApplicationComponent by lazy {
+        DaggerApplicationComponent.factory().create(applicationContext)
+    }
+}
