@@ -1,5 +1,8 @@
 package com.volozhinsky.cathunter.ui.select_breed
 
+import android.content.BroadcastReceiver
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,15 +11,19 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.volozhinsky.cathunter.CatHunterApp
 import com.volozhinsky.cathunter.R
 import com.volozhinsky.cathunter.di.ViewModelFactory
+import com.volozhinsky.cathunter.ui.BroadCastRec
 import com.volozhinsky.cathunter.ui.models.CatBreedUI
 import javax.inject.Inject
 
 class SelectBreedFragment : Fragment() {
+
+    private lateinit var br: BroadcastReceiver
 
     @Inject
     lateinit var factory: ViewModelFactory
@@ -32,7 +39,15 @@ class SelectBreedFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        registerBroadcastReceiver()
         return inflater.inflate(R.layout.fragment_select_breed, container, false)
+    }
+
+    private fun registerBroadcastReceiver() {
+        val filter = IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED)
+        br = BroadCastRec()
+        val resflags = ContextCompat.RECEIVER_EXPORTED
+        ContextCompat.registerReceiver(requireContext(),br,filter,resflags)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
