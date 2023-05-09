@@ -1,31 +1,53 @@
 package com.volozhinsky.cathunter.ui.select_breed
 
+import android.content.BroadcastReceiver
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.volozhinsky.cathunter.CatHunterApp
 import com.volozhinsky.cathunter.R
+import com.volozhinsky.cathunter.di.ViewModelFactory
+import com.volozhinsky.cathunter.ui.BroadCastRec
 import com.volozhinsky.cathunter.ui.models.CatBreedUI
-import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class SelectBreedFragment : Fragment() {
 
-    private val catBreedViewModel by viewModels<SelectBreedViewModel>()
+    private lateinit var br: BroadcastReceiver
+
+    @Inject
+    lateinit var factory: ViewModelFactory
+    private val catBreedViewModel: SelectBreedViewModel by viewModels {factory}
     private var listbreed: List<CatBreedUI>? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        (requireContext().applicationContext as CatHunterApp).appComponent.inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        registerBroadcastReceiver()
         return inflater.inflate(R.layout.fragment_select_breed, container, false)
+    }
+
+    private fun registerBroadcastReceiver() {
+        val filter = IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED)
+        br = BroadCastRec()
+        val resflags = ContextCompat.RECEIVER_EXPORTED
+        ContextCompat.registerReceiver(requireContext(),br,filter,resflags)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,13 +64,13 @@ class SelectBreedFragment : Fragment() {
             val spinerAdapter = ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_spinner_item,
-                listBreedLd.map{
+                listBreedLd.map {
                     it.name
                 }
             )
             spinner.adapter = spinerAdapter
         }
-        view.findViewById<Button>(R.id.buttonShowCat).setOnClickListener{
+        view.findViewById<Button>(R.id.buttonShowCat).setOnClickListener {
             listbreed?.let {
                 startRandomCatFragment(it[spinner.selectedItemPosition].id)
             }
@@ -56,7 +78,7 @@ class SelectBreedFragment : Fragment() {
         catBreedViewModel.getBreedList()
     }
 
-    fun startRandomCatFragment(id: String){
+    fun startRandomCatFragment(id: String) {
         val action = SelectBreedFragmentDirections.actionSelectBreedFragmentToRandomCatFragment(id)
         findNavController().navigate(action)
     }
